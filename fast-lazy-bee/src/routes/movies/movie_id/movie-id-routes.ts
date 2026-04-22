@@ -16,6 +16,8 @@ import {
 } from '../../../utils/constants/enums';
 import { addLinksToResource } from '../../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../../utils/routing-utils';
+import { publishMessage } from '../../../utils/pub-sub-utils';
+import { PublishedMessage } from '../../../schemas/pub-sub';
 
 const endpoint = API_ENDPOINTS.MOVIE;
 const tags: RouteTags[] = [RouteTags.MOVIE] as const;
@@ -28,6 +30,19 @@ const routes: RouteOptions[] = [
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movie = (await this.dataStore.fetchMovie(params.movie_id)) as MovieSchemaType;
+
+      const msg : PublishedMessage = {
+          event: "movie_viewed",
+          data: {
+            movieId: params.movie_id, 
+            movieTitle: movie.title,
+          },
+          timestamp: new Date().toISOString()
+      }
+
+      publishMessage(msg).catch(err => {
+        console.error('Async publish failed', err);
+      });
 
       if (acceptsHal(request)) {
         const halMovie = addLinksToResource<typeof MovieSchema>(request, movie);

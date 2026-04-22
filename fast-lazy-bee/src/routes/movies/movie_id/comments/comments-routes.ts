@@ -23,6 +23,8 @@ import {
   genUnauthorizedError,
   registerEndpointRoutes
 } from '../../../../utils/routing-utils';
+import { publishMessage } from '../../../../utils/pub-sub-utils';
+import { PublishedMessage } from '../../../../schemas/pub-sub';
 
 const endpoint = API_ENDPOINTS.MOVIE_COMMENTS;
 const tags: RouteTags[] = [RouteTags.COMMENTS] as const;
@@ -44,6 +46,20 @@ const routes: RouteOptions[] = [
         pageSize: Math.min(comments.length, totalCount),
         totalCount
       };
+
+      const msg : PublishedMessage = {
+          event: "comments_viewed",
+          data: {
+          page: body.page,
+          pageSize: body.pageSize,
+          movieId: movieId
+          },
+          timestamp: new Date().toISOString()
+      }
+
+      publishMessage(msg).catch(err => {
+        console.error('Async publish failed', err);
+      });
 
       if (acceptsHal(request)) {
         const halBody = addLinksToCollection<typeof MovieCommentSchema>(request, body);

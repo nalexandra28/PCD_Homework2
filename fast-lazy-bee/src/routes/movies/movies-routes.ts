@@ -15,6 +15,8 @@ import {
 } from '../../utils/constants/enums';
 import { addLinksToCollection } from '../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
+import { publishMessage } from '../../utils/pub-sub-utils';
+import { PublishedMessage } from '../../schemas/pub-sub';
 
 const endpoint = API_ENDPOINTS.MOVIES;
 const tags: RouteTags[] = [RouteTags.MOVIES] as const;
@@ -36,6 +38,19 @@ const routes: RouteOptions[] = [
         pageSize,
         totalCount
       };
+
+      const msg : PublishedMessage = {
+          event: "movies_viewed",
+          data: {
+            page: body.page,
+            pageSize: body.pageSize
+          },
+          timestamp: new Date().toISOString()
+      }
+
+      publishMessage(msg).catch(err => {
+        console.error('Async publish failed', err);
+      });
 
       if (acceptsHal(request)) {
         const resourceLinks = {

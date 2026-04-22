@@ -17,7 +17,6 @@ const plugins = {
   import: importPlugin,
   node: nodePlugin,
   prettier: prettierPlugin
-  // '@typescript-eslint': typescriptPlugin
 };
 
 export default [

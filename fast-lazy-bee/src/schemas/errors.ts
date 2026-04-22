@@ -75,11 +75,6 @@ const ErrorsSchema = Type.Array(
   )
 );
 
-/* Loosely follows RFC 9457
- * https://datatracker.ietf.org/doc/html/rfc9457
- *
- * See also: https://swagger.io/blog/problem-details-rfc9457-api-error-handling/
- */
 const ErrorSchema = Type.Object({
   type: Type.Optional(ErrorTypeSchema),
   status: ErrorStatusSchema,

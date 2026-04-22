@@ -5,9 +5,9 @@ const CONFIG_DEFAULTS = {
   ENV: 'development',
   PORT: 3000,
   MONGO_IMAGE: 'mongo:8',
-  MONGO_PORT: 27027,
+  MONGO_PORT: 27017,
   MONGO_DB_NAME: 'sample_mflix',
-  MONGO_URL: 'mongodb://localhost:27027/sample_mflix',
+  MONGO_URL: 'mongodb://localhost:27017/sample_mflix',
   CACHE_EXPIRATION_S: 10
 } as const;
 
