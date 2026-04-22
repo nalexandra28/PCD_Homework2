@@ -14,6 +14,6 @@ WORKDIR $APP_HOME
 COPY --chown=node:node . $APP_HOME
 COPY --chown=node:node --from=builder /build $APP_HOME
 USER node
-EXPOSE $APP_CONTAINER_PORT
+EXPOSE 3000
 ENTRYPOINT ["dumb-init"]
 CMD ["npm", "start"]

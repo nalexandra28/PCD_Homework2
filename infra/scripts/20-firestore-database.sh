@@ -3,6 +3,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib.sh"
 
+FIRESTORE_DATABASE_ID='(default)'
+FIRESTORE_TYPE=firestore-native
+
 if gcloud firestore databases describe \
   --database="${FIRESTORE_DATABASE_ID}" \
   --project="${GCP_PROJECT_ID}" &>/dev/null; then

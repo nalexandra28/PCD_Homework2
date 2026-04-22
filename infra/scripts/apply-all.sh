@@ -8,4 +8,4 @@ source "${SCRIPT_DIR}/lib.sh"
 "${SCRIPT_DIR}/20-firestore-database.sh"
 
 echo ""
-echo "All steps finished. Topic: ${PUBSUB_TOPIC_RESOURCE_EVENTS} | Firestore: ${FIRESTORE_DATABASE_ID} (project ${GCP_PROJECT_ID}, region ${GCP_REGION})"
+echo "All steps finished. Topic: movie-events | Firestore: (default) (project ${GCP_PROJECT_ID}, region ${GCP_REGION})"

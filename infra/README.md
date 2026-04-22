@@ -1,31 +1,36 @@
 # Infrastructure — Google Cloud SDK (`gcloud`)
 
-This document describes how to provision **Pub/Sub** and **Cloud Firestore** for the **PCD** homework project using the shell scripts under [`scripts/`](scripts/).
-
-## Region
-
-The default region is `us-west1`. The same value should appear in the repository-root `.env` and in any runtime configuration.
+Shell scripts under [`scripts/`](scripts/) provision GCP resources. `lib.sh` loads the repo-root `.env` and requires **`GCP_PROJECT_ID`**; **`GCP_REGION`** defaults to `us-central1` if unset.
 
 ## Prerequisites
 
-1. [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) installed, with `gcloud` on `PATH`.
-2. A GCP project with billing enabled.
-3. User authentication: `gcloud auth login`.
+1. [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) with `gcloud` on `PATH`.
+2. Billing enabled on the GCP project; `gcloud auth login`.
 
 ### API enablement
 
-The first script enables `pubsub.googleapis.com` and `firestore.googleapis.com`.
+`00-enable-apis.sh` enables: `pubsub.googleapis.com`, `firestore.googleapis.com`, `cloudbuild.googleapis.com`, `run.googleapis.com`, `artifactregistry.googleapis.com`.
 
-## Resources created
+## `.env` (repo root)
 
-| Resource type   | Default identifier |
-| --------------- | ------------------ |
-| Pub/Sub topic   | `movie-events` (override: `PUBSUB_TOPIC_RESOURCE_EVENTS`) |
-| Firestore (native) | Id `(default)`, `firestore-native`, `--location` = `GCP_REGION` |
+| Variable        | Required | Notes              |
+| --------------- | -------- | ------------------ |
+| `GCP_PROJECT_ID` | yes      |                    |
+| `GCP_REGION`    | no       | default `us-central1` |
+| `MONGO_URL`     | for `15-` and `30-` | Atlas SRV string; see below |
 
-## Execution (clean clone)
+## Scripts
 
-### Bash (Linux, WSL)
+| Script                 | Role                                                                 |
+| ---------------------- | -------------------------------------------------------------------- |
+| `00-enable-apis.sh`    | Enable APIs                                                          |
+| `10-pubsub-topic.sh`  | Create Pub/Sub topic `movie-events` if missing                     |
+| `15-mongorestore-sample-mflix.sh` | `curl` sample_mflix archive, `mongorestore` (needs `MONGO_URL`; no `gcloud`) |
+| `20-firestore-database.sh` | Create Firestore native DB `(default)` if missing                 |
+| `30-cloud-run-fast-lazy-bee.sh` | Cloud Build, Artifact Registry, deploy `fast-lazy-bee`  |
+| `apply-all.sh`         | Runs `00`, `10`, `20` (not `15` or `30`)                         |
+
+## Execution
 
 ```bash
 cd path/to/PCD_Homework2
@@ -35,13 +40,15 @@ chmod +x *.sh
 ./apply-all.sh
 ```
 
-Edit the repository-root `.env` before execution; scripts load `../../.env` relative to `infra/scripts/`.
+## MongoDB Atlas — `sample_mflix` data
 
-### Verification
+The app expects a **`sample_mflix`** database (see `fast-lazy-bee` config). With [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) on your `PATH`, you can run `./15-mongorestore-sample-mflix.sh` from `infra/scripts/` (it uses `MONGO_URL` in `.env` and stores the archive under `infra/data/`), or run the same steps by hand:
 
-- `gcloud config get-value project`
-- `gcloud services list --enabled | grep -E 'pubsub|firestore'`
-- `gcloud pubsub topics describe resource-events --project=YOUR_PROJECT_ID`
-- `gcloud firestore databases list --project=YOUR_PROJECT_ID`
+```bash
+curl -fS 'https://atlas-education.s3.amazonaws.com/sample_mflix.archive' -o sample_mflix.archive
+mongorestore --uri 'YOUR_MONGO_URL' --drop --archive=sample_mflix.archive
+```
 
-The repository-root `.env` must remain untracked (see root `.gitignore`).
+Replace `YOUR_MONGO_URL` with the same value as in `.env` (quoted if it contains `&` or `?`).
+
+

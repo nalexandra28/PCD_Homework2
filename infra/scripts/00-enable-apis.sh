@@ -7,5 +7,8 @@ echo "Enabling APIs on project ${GCP_PROJECT_ID} ..."
 gcloud services enable \
   pubsub.googleapis.com \
   firestore.googleapis.com \
+  cloudbuild.googleapis.com \
+  run.googleapis.com \
+  artifactregistry.googleapis.com \
   --project="${GCP_PROJECT_ID}"
 echo "Done."
