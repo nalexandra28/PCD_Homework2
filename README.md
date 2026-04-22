@@ -11,7 +11,7 @@ This repository contains the **PCD** coursework submission: an extension of the 
 | `[services/analytics-function/](services/analytics-function/)` | **Serverless** consumer for **Pub/Sub**                                                      |
 | `[services/ws-gateway/](services/ws-gateway/)`                 | **WebSocket** gateway                                                                        |
 | `[dashboard/](dashboard/)`                                     | **HTML** client                                                                              |
-| `[infra/scripts/](infra/scripts/)`                             | **Bash** automation with `gcloud` to enable APIs and the Pub/Sub topic `**resource-events`** |
+| `[infra/scripts/](infra/scripts/)`                             | **Bash** + `gcloud`: APIs, Pub/Sub topic `**resource-events`**, **Cloud Firestore** (native) |
 
 
 ## Provisioning from a clean clone

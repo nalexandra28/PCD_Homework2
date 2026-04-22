@@ -16,7 +16,15 @@ source "${ENV_FILE}"
 set +a
 
 : "${GCP_PROJECT_ID:?Set GCP_PROJECT_ID in .env at repository root}"
+gcloud config set project "${GCP_PROJECT_ID}" --quiet
 : "${GCP_REGION:=us-west1}"
-: "${PUBSUB_TOPIC_RESOURCE_EVENTS:=resource-events}"
+: "${PUBSUB_TOPIC_RESOURCE_EVENTS:=movie-events}"
+if [ -z "${FIRESTORE_DATABASE_ID:-}" ]; then
+  export FIRESTORE_DATABASE_ID='(default)'
+else
+  export FIRESTORE_DATABASE_ID
+fi
+: "${FIRESTORE_TYPE:=firestore-native}"
 
 export GCP_PROJECT_ID GCP_REGION PUBSUB_TOPIC_RESOURCE_EVENTS
+export FIRESTORE_DATABASE_ID FIRESTORE_TYPE

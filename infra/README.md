@@ -1,6 +1,6 @@
 # Infrastructure — Google Cloud SDK (`gcloud`)
 
-This document describes how to provision **Pub/Sub** for the **PCD** homework project using the shell scripts under `[scripts/](scripts/)`. 
+This document describes how to provision **Pub/Sub** and **Cloud Firestore** for the **PCD** homework project using the shell scripts under [`scripts/`](scripts/).
 
 ## Region
 
@@ -14,19 +14,18 @@ The default region is `us-west1`. The same value should appear in the repository
 
 ### API enablement
 
-The first script in the sequence enables `pubsub.googleapis.com`.
+The first script enables `pubsub.googleapis.com` and `firestore.googleapis.com`.
 
 ## Resources created
 
-
-| Resource type | Default identifier                                           |
-| ------------- | ------------------------------------------------------------ |
-| Pub/Sub topic | `resource-events` (override: `PUBSUB_TOPIC_RESOURCE_EVENTS`) |
-
+| Resource type   | Default identifier |
+| --------------- | ------------------ |
+| Pub/Sub topic   | `movie-events` (override: `PUBSUB_TOPIC_RESOURCE_EVENTS`) |
+| Firestore (native) | Id `(default)`, `firestore-native`, `--location` = `GCP_REGION` |
 
 ## Execution (clean clone)
 
-### Bash (Linux, macOS, Git Bash, WSL, Cloud Shell)
+### Bash (Linux, WSL)
 
 ```bash
 cd path/to/PCD_Homework2
@@ -41,8 +40,8 @@ Edit the repository-root `.env` before execution; scripts load `../../.env` rela
 ### Verification
 
 - `gcloud config get-value project`
-- `gcloud services list --enabled`
-- `gcloud pubsub topics describe resource-events`
+- `gcloud services list --enabled | grep -E 'pubsub|firestore'`
+- `gcloud pubsub topics describe resource-events --project=YOUR_PROJECT_ID`
+- `gcloud firestore databases list --project=YOUR_PROJECT_ID`
 
 The repository-root `.env` must remain untracked (see root `.gitignore`).
-
