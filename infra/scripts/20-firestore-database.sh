@@ -19,3 +19,7 @@ else
     --project="${GCP_PROJECT_ID}"
   echo "Created."
 fi
+
+gcloud firestore fields ttls update expiresAt \
+  --collection-group=movie-stats \
+  --enable-ttl
