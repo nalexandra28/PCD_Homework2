@@ -25,6 +25,11 @@ gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
   --role="roles/logging.logWriter" \
   --quiet
 
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member="serviceAccount:${COMPUTE_SA}" \
+  --role="roles/pubsub.publisher" \
+  --quiet
+
 APP_DIR="${REPO_ROOT}/fast-lazy-bee"
 IMAGE="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPOSITORY}/${AR_IMAGE}:${AR_TAG}"
 

@@ -1,12 +1,19 @@
 const functions = require('@google-cloud/functions-framework');
 const { Firestore } = require('@google-cloud/firestore');
 const { TypeCompiler } = require('@sinclair/typebox/compiler');
-const { MovieStatsSchema, ProcessedStatsSchema } = require('./collection-schemas');
+
+
+const { MovieStatsSchema, ProcessedStatsSchema } = require('./schemas/collection-schemas');
+
 
 const MovieStatsValidator = TypeCompiler.Compile(MovieStatsSchema);
 const ProcessedStatsValidator = TypeCompiler.Compile(ProcessedStatsSchema);
 
-const firestore = new Firestore({ databaseId: 'default' });
+const { PublishedMessageSchema } = require('./schemas/messages-schemas');
+const { publishMessage } = require('./utils/pub-sub-utils');
+const NotificationMessageValidator = TypeCompiler.Compile(PublishedMessageSchema);
+
+const firestore = new Firestore({ databaseId: '(default)' });
 
 const statsCollection = firestore.collection('movie-stats');
 const processedCollection = firestore.collection('processed-messages');
@@ -18,7 +25,7 @@ async function processEvent(messageId, eventName, eventData) {
   if (eventName == "movie_viewed") {
 
     console.log("messageId =", messageId);
-    console.log("movie data ", movieData );
+    console.log("movie data ", movieData);
 
     const processedDoc = await processedCollection.doc(messageId).get();
 
@@ -65,6 +72,30 @@ async function processEvent(messageId, eventName, eventData) {
       movieId: movieData.movieId,
       event: eventName
     }));
+
+
+    const notificationMessage = {
+      event: eventName,
+      data: {
+        movieId: movieData.movieId,
+        movieTitle: movieData.movieTitle || 'Unknown'
+      },
+      timestamp: new Date().toISOString()
+    }
+
+    if (!NotificationMessageValidator.Check(notificationMessage)) {
+      console.error("Invalid schema", [...NotificationMessageValidator.Errors(notificationMessage)]);
+      throw new Error("Invalid NotificationMessage");
+    }
+
+    try {
+      await publishMessage(notificationMessage);
+      console.log("Message was published ", notificationMessage);
+    } catch (err) {
+      console.error('Publish failed', err);
+      throw new Error("Failed to publish message");
+    }
+
     return { status: 'processed' };
   }
   else {

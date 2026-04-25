@@ -10,5 +10,7 @@ gcloud services enable \
   cloudbuild.googleapis.com \
   run.googleapis.com \
   artifactregistry.googleapis.com \
+  cloudfunctions.googleapis.com \
+  eventarc.googleapis.com \
   --project="${GCP_PROJECT_ID}"
 echo "Done."
