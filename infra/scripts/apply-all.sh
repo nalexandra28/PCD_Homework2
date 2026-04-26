@@ -9,7 +9,9 @@ chmod +x "${SCRIPT_DIR}"/*.sh
 "${SCRIPT_DIR}/10-pubsub-topic.sh"
 "${SCRIPT_DIR}/20-firestore-database.sh"
 "${SCRIPT_DIR}/30-cloud-run-fast-lazy-bee.sh"
-"${SCRIPT_DIR}/40-cloud-run-analytics-function.sh"
+"${SCRIPT_DIR}/31-cloud-run-analytics-function.sh"
+"${SCRIPT_DIR}/32-cloud-run-ws-gateway.sh"
+"${SCRIPT_DIR}/33-write-dashboard-config.sh"
 
 echo ""
 echo "All steps finished. Topic: movie-events | Firestore: (default) (project ${GCP_PROJECT_ID}, region ${GCP_REGION})"

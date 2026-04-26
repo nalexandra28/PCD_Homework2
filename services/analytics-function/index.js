@@ -38,7 +38,6 @@ async function processEvent(messageId, eventName, eventData) {
       return { status: 'duplicate' };
     }
 
-    const statsRef = statsCollection.doc(movieData.movieId);
     const movieDoc = {
       movieId: movieData.movieId,
       movieTitle: movieData.movieTitle || 'Unknown',
@@ -52,7 +51,7 @@ async function processEvent(messageId, eventName, eventData) {
 
     movieDoc.expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-    await statsRef.set(movieDoc);
+    const statsDocRef = await statsCollection.add(movieDoc);
 
     const prcDoc = {
       movieId: movieData.movieId,
@@ -80,7 +79,8 @@ async function processEvent(messageId, eventName, eventData) {
         movieId: movieData.movieId,
         movieTitle: movieData.movieTitle || 'Unknown'
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      sourceEventId: statsDocRef.id
     }
 
     if (!NotificationMessageValidator.Check(notificationMessage)) {
@@ -98,11 +98,11 @@ async function processEvent(messageId, eventName, eventData) {
 
     return { status: 'processed' };
   }
-  else {
-    if (eventName == "movies_viewed" || eventName == "comments_viewed") {
-      return { status: 'skipped for now' }
-    }
+  if (eventName == "movies_viewed" || eventName == "comments_viewed") {
+    return { status: 'skipped for now' };
   }
+
+  return { status: 'ignored', event: eventName };
 
 }
 

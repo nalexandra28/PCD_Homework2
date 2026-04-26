@@ -8,7 +8,8 @@ const MovieData = Type.Object({
 const MovieViewedEvent = Type.Object({
   event: Type.Literal("movie_viewed"),
   data: MovieData,
-  timestamp: Type.String()
+  timestamp: Type.String(),
+  sourceEventId: Type.Optional(Type.String())
 });
 
 const PublishedMessageSchema = MovieViewedEvent;

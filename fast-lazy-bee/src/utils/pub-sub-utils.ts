@@ -3,9 +3,8 @@ import { PublishedMessage } from '../schemas/pub-sub';
 
 const topicName = 'movie-events';
 
-const pubSubClient = new PubSub({
-    projectId: "pcd-project-2"
-});
+const projectId = process.env.GCP_PROJECT_ID;
+const pubSubClient = projectId ? new PubSub({ projectId }) : new PubSub();
 
 export async function publishMessage(data: PublishedMessage) {
   

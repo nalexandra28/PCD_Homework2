@@ -5,6 +5,7 @@ source "${SCRIPT_DIR}/lib.sh"
 
 PUBSUB_TOPIC_EVENTS="movie-events"
 PUBSUB_TOPIC_NOTIFICATIONS="event-notifications"
+PUBSUB_SUB_NOTIFICATIONS="${EVENT_NOTIFICATIONS_SUBSCRIPTION:-event-notifications-ws-gateway}"
 
 if gcloud pubsub topics describe "${PUBSUB_TOPIC_EVENTS}" \
   --project="${GCP_PROJECT_ID}" &>/dev/null; then
@@ -22,6 +23,17 @@ if gcloud pubsub topics describe "${PUBSUB_TOPIC_NOTIFICATIONS}" \
 else
   echo "Creating topic ${PUBSUB_TOPIC_NOTIFICATIONS} ..."
   gcloud pubsub topics create "${PUBSUB_TOPIC_NOTIFICATIONS}" \
+    --project="${GCP_PROJECT_ID}"
+  echo "Created."
+fi
+
+if gcloud pubsub subscriptions describe "${PUBSUB_SUB_NOTIFICATIONS}" \
+  --project="${GCP_PROJECT_ID}" &>/dev/null; then
+  echo "Subscription ${PUBSUB_SUB_NOTIFICATIONS} (topic ${PUBSUB_TOPIC_NOTIFICATIONS}) already exists."
+else
+  echo "Creating pull subscription ${PUBSUB_SUB_NOTIFICATIONS} ..."
+  gcloud pubsub subscriptions create "${PUBSUB_SUB_NOTIFICATIONS}" \
+    --topic="${PUBSUB_TOPIC_NOTIFICATIONS}" \
     --project="${GCP_PROJECT_ID}"
   echo "Created."
 fi

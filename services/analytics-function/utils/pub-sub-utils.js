@@ -2,9 +2,11 @@ const { PubSub } = require('@google-cloud/pubsub');
 
 const topicName = 'event-notifications';
 
-const pubSubClient = new PubSub({
-    projectId: "pcd-project-2"
-});
+const projectId = process.env.GCP_PROJECT_ID;
+
+const pubSubClient = projectId
+  ? new PubSub({ projectId })
+  : new PubSub();
 
 async function publishMessage(data) {
   

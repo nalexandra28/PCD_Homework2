@@ -1,0 +1,189 @@
+:root {
+  --bg: #0f1419;
+  --card: #1a222c;
+  --text: #e6edf3;
+  --muted: #8b9bab;
+  --border: #30363d;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --err: #f85149;
+  --link: #58a6ff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 58rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.lede {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 42em;
+}
+
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.status-pill {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--err);
+  flex-shrink: 0;
+}
+
+.status-pill[data-state="connected"] {
+  background: var(--ok);
+  box-shadow: 0 0 0.45rem var(--ok);
+}
+
+.status-pill[data-state="reconnecting"] {
+  background: var(--warn);
+  box-shadow: 0 0 0.4rem var(--warn);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.status-pill[data-state="error"],
+.status-pill[data-state="offline"] {
+  background: var(--err);
+}
+
+.status-text {
+  font-weight: 500;
+  min-width: 8rem;
+}
+
+.status-sep {
+  color: var(--border);
+}
+
+.status-label,
+.hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.client-count {
+  font-size: 1.1rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem 1.1rem 1.25rem;
+  min-height: 10rem;
+}
+
+.card h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ol.list {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+
+.list li {
+  padding: 0.4rem 0 0.4rem 0.1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+ol.list li::marker {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.feed li small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.view-count {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PCD — Live analytics</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <h1>Live analytics</h1>
+        <p class="lede">WebSocket stream from the project gateway (popular movies, recent activity, client count).</p>
+      </header>
+
+      <section class="status-bar" aria-live="polite">
+        <div class="status-pill" id="conn-indicator" data-state="offline" title="Connection"></div>
+        <span class="status-text" id="conn-text">Offline</span>
+        <span class="status-sep" aria-hidden="true">|</span>
+        <span class="status-label">connected clients (this replica)</span>
+        <strong class="client-count" id="client-count">0</strong>
+      </section>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Top movies</h2>
+          <ol class="list" id="popular-list" aria-label="Top movies by views in window"></ol>
+        </section>
+
+        <section class="card">
+          <h2>Recent activity</h2>
+          <ul class="list feed" id="recent-list" aria-label="Recent events"></ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
